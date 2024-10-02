@@ -1,20 +1,51 @@
-import { CanActivate, ExecutionContext, Inject } from "@nestjs/common";
+import { CanActivate, ExecutionContext, ForbiddenException, Inject, UnauthorizedException } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { Request } from "express";
-import { Observable } from "rxjs";
+import { firstValueFrom } from "rxjs";
 import { NATS_SERVICE } from "src/config";
+import { Reflector } from "@nestjs/core";
 
 
-export class AuthGuard implements CanActivate{
-    
+
+export class AuthGuard implements CanActivate {
+
     constructor(
-        @Inject(NATS_SERVICE) private readonly client: ClientProxy
-    ){}
+        @Inject(NATS_SERVICE) private readonly client: ClientProxy,
+        private reflector:Reflector
+    ) { }
 
-    canActivate(context: ExecutionContext): Promise<boolean>  {
+    async canActivate(context: ExecutionContext): Promise<boolean> {
+        const requiredRoles = this.reflector.get<string[]>('roles', context.getHandler())
+
+
         const request = context.switchToHttp().getRequest();
-        
-        throw new Error("Method not implemented.");
+        const token = this.extractTokenFromHeader(request);
+        if (!token) {
+            throw new UnauthorizedException('Token not found');
+        }
+        try {
+
+            const {user, token:newToken}=await firstValueFrom(
+                this.client.send('auth.verify.token',token)
+            )
+
+            request['user'] = user
+            request['token'] = newToken;
+
+            if (requiredRoles && requiredRoles.length > 0 ) {
+                const hasRole = ()=> requiredRoles.some((role)=> user.roles?.includes(role))
+                if (!user.roles  || !hasRole()) {
+                    throw new ForbiddenException('Insufficient permissions');
+                }
+            }
+
+        } catch(error) {
+            if (error instanceof ForbiddenException) {
+                throw error;
+            }
+            throw new UnauthorizedException();
+        }
+        return true;
     }
 
     private extractTokenFromHeader(request: Request): string | undefined {

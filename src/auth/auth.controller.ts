@@ -1,10 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Inject } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Inject, UseGuards } from '@nestjs/common';
 
 import { NATS_SERVICE } from 'src/config';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { RegisterUserDto } from './dto/register-user.dto';
-import { firstValueFrom } from 'rxjs';
+import { catchError, firstValueFrom } from 'rxjs';
 import { LoginUserDto } from './dto/login-user.dto';
+import { CurrentUser } from './interfaces/current-user.interface';
+import { Token, User } from './decorators';
+import { AuthGuard } from './guards/auth.guard';
+import { Roles } from './decorators/roles.decorator';
+import { Role } from './enum/roles.enum';
 
 @Controller('auth')
 export class AuthController {
@@ -14,28 +19,33 @@ export class AuthController {
   ) { }
 
   @Post('register')
-  async registerUser(@Body() registerUserDto: RegisterUserDto) { 
-    console.log({registerUserDto})
-    try {
-      const user = await firstValueFrom(
-        this.client.send('auth.register.user',registerUserDto)
-      )
-      return user;
-    } catch (error) {
-      throw new RpcException(error)
-    }
+  registerUser(@Body() registerUserDto: RegisterUserDto) {
+    return this.client.send('auth.register.user', registerUserDto).pipe(
+      catchError((error) => {
+        throw new RpcException(error)
+      })
+    )
+
   }
 
   @Post('login')
-  async loginUser(@Body() loginUserDto: LoginUserDto) {
-    try {
-      const user = await firstValueFrom(
-        this.client.send('auth.login.user', loginUserDto)
-      )
-      return user;
-    } catch (error) {
-      throw new RpcException(error)
+  loginUser(@Body() loginUserDto: LoginUserDto) {
+    return this.client.send('auth.login.user', loginUserDto).pipe(
+      catchError((error) => {
+        throw new RpcException(error);
+      })
+    )
+  }
+
+
+  @UseGuards(AuthGuard)
+  @Get('verify')
+  verifyToken(@User() user: CurrentUser, @Token() token: string) {
+    //return this.client.send('auth.verify.token',{})
+    return {
+      user,
+      token
     }
   }
-  
+
 }
