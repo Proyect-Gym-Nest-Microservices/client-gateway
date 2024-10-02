@@ -13,12 +13,4 @@ export class RegisterUserDto {
     @IsStrongPassword()
     password: string
 
-    @IsBoolean()
-    @IsOptional()
-    isActive?: boolean;
-
-    @IsString()
-    @IsOptional()
-    avatarUrl?: string;
-
 }

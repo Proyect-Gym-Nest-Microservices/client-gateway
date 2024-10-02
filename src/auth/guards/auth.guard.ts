@@ -4,6 +4,7 @@ import { Request } from "express";
 import { firstValueFrom } from "rxjs";
 import { NATS_SERVICE } from "src/config";
 import { Reflector } from "@nestjs/core";
+import { ROLES_KEY } from "../decorators/roles.decorator";
 
 
 
@@ -15,16 +16,13 @@ export class AuthGuard implements CanActivate {
     ) { }
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
-        const requiredRoles = this.reflector.get<string[]>('roles', context.getHandler())
-
-
+        const validRoles = this.reflector.get<string[]>(ROLES_KEY, context.getHandler())
         const request = context.switchToHttp().getRequest();
         const token = this.extractTokenFromHeader(request);
         if (!token) {
             throw new UnauthorizedException('Token not found');
         }
         try {
-
             const {user, token:newToken}=await firstValueFrom(
                 this.client.send('auth.verify.token',token)
             )
@@ -32,20 +30,19 @@ export class AuthGuard implements CanActivate {
             request['user'] = user
             request['token'] = newToken;
 
-            if (requiredRoles && requiredRoles.length > 0 ) {
-                const hasRole = ()=> requiredRoles.some((role)=> user.roles?.includes(role))
+            if (validRoles && validRoles.length > 0 ) {
+                const hasRole = ()=> validRoles.some((role)=> user.roles?.includes(role))
                 if (!user.roles  || !hasRole()) {
                     throw new ForbiddenException('Insufficient permissions');
                 }
             }
-
+            return true;
         } catch(error) {
             if (error instanceof ForbiddenException) {
                 throw error;
             }
             throw new UnauthorizedException();
         }
-        return true;
     }
 
     private extractTokenFromHeader(request: Request): string | undefined {

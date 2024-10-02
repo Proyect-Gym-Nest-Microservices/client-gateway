@@ -1,5 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Inject, UseGuards } from '@nestjs/common';
-
+import { Controller, Get, Post, Body, Inject, UseGuards } from '@nestjs/common';
 import { NATS_SERVICE } from 'src/config';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { RegisterUserDto } from './dto/register-user.dto';
@@ -8,8 +7,6 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { CurrentUser } from './interfaces/current-user.interface';
 import { Token, User } from './decorators';
 import { AuthGuard } from './guards/auth.guard';
-import { Roles } from './decorators/roles.decorator';
-import { Role } from './enum/roles.enum';
 
 @Controller('auth')
 export class AuthController {
