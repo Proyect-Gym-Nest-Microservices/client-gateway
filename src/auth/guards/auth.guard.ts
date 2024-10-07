@@ -23,12 +23,12 @@ export class AuthGuard implements CanActivate {
             throw new UnauthorizedException('Token not found');
         }
         try {
-            const {user, token:newToken}=await firstValueFrom(
+            const {user}=await firstValueFrom(
                 this.client.send('auth.verify.token',token)
             )
 
             request['user'] = user
-            request['token'] = newToken;
+            request['token'] = token;
 
             if (validRoles && validRoles.length > 0 ) {
                 const hasRole = ()=> validRoles.some((role)=> user.roles?.includes(role))
