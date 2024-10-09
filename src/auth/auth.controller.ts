@@ -64,6 +64,18 @@ export class AuthController {
     }
   }
 
+  @Post('forgot-password')
+  async forgotPassword(@Body() email:string) {
+    try {
+      const response = await firstValueFrom(
+        this.client.send('auth.forgot.password',email)
+      )
+      return response
+    } catch (error) {
+      throw new RpcException(error)
+    }
+  }
+
   @UseGuards(AuthGuard)
   @Roles(Role.ADMIN_ROLE,Role.USER_ROLE)
   @Patch('change-password')
