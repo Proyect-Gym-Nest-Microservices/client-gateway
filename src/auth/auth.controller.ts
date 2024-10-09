@@ -11,6 +11,7 @@ import { Request, Response } from 'express';
 import { Roles } from './decorators/roles.decorator';
 import { Role } from './enum/roles.enum';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -71,6 +72,18 @@ export class AuthController {
         this.client.send('auth.forgot.password',email)
       )
       return response
+    } catch (error) {
+      throw new RpcException(error)
+    }
+  }
+
+  @Post('reset-password')
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    try {
+      const response = await firstValueFrom(
+        this.client.send('auth.reset.password',resetPasswordDto)
+      )
+      return response;
     } catch (error) {
       throw new RpcException(error)
     }
