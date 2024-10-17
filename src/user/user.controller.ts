@@ -14,7 +14,8 @@ export class UserController {
     @Inject(NATS_SERVICE) private readonly client: ClientProxy
   ) { }
 
-
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE, Role.USER_ROLE)
   @Patch('update-user')
   async updateUser(@Body() updateUserDto:UpdateUserDto) {
     try {
@@ -41,6 +42,8 @@ export class UserController {
     }
   }
 
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
   @Delete('delete-user')
   async deleteUser(@Body() id: string) {
     try {
