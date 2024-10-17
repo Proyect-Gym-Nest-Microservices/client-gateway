@@ -12,6 +12,7 @@ import { Roles } from './decorators/roles.decorator';
 import { Role } from './enum/roles.enum';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -66,10 +67,10 @@ export class AuthController {
   }
 
   @Post('forgot-password')
-  async forgotPassword(@Body() email:string) {
+  async forgotPassword(@Body() forgotPassworddto:ForgotPasswordDto) {
     try {
       const response = await firstValueFrom(
-        this.client.send('auth.forgot.password',email)
+        this.client.send('auth.forgot.password',forgotPassworddto)
       )
       return response
     } catch (error) {
@@ -94,10 +95,10 @@ export class AuthController {
   @Patch('change-password')
   async changePassword(@Body() changePasswordDto: ChangePasswordDto) {
     try {
-      const passwort = await firstValueFrom(
+      const response = await firstValueFrom(
         this.client.send('auth.change.password', changePasswordDto)
       )
-      return passwort;
+      return response;
     } catch (error) {
       throw new RpcException(error);
     }
@@ -115,8 +116,8 @@ export class AuthController {
     }
   }
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE,Role.USER_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE,Role.USER_ROLE)
   @Post('refresh')
   async refreshAccessToken(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const refreshToken = req.cookies['refreshToken'];
