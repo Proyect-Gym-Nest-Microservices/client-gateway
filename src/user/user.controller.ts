@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Inject, Patch, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Param, Patch, Query, UseGuards } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { NATS_SERVICE } from 'src/config';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -29,6 +29,20 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE,Role.USER_ROLE)
+  @Get('find-by-id')
+  async findUserById(@Param('id') id: string) {
+    try {
+      const response = await firstValueFrom(
+        this.client.send('find.user.by.id',id)
+      )
+      return response
+    } catch (error) {
+      throw new RpcException(error)
+    }
+  }
+
+  @UseGuards(AuthGuard)
   @Roles(Role.ADMIN_ROLE)
   @Get('find-all-users')
   async findAll(@Query() paginationDto: PaginationDto) {
@@ -45,7 +59,7 @@ export class UserController {
   @UseGuards(AuthGuard)
   @Roles(Role.ADMIN_ROLE)
   @Delete('delete-user')
-  async deleteUser(@Body() id: string) {
+  async deleteUser(@Param('id') id: string) {
     try {
       const response = await firstValueFrom(
         this.client.send('remove.user',id)
