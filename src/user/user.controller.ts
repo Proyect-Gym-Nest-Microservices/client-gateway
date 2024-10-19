@@ -30,7 +30,7 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Roles(Role.ADMIN_ROLE,Role.USER_ROLE)
-  @Get('find-by-id')
+  @Get('find-by-id/:id')
   async findUserById(@Param('id') id: string) {
     try {
       const response = await firstValueFrom(
@@ -58,7 +58,7 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Roles(Role.ADMIN_ROLE)
-  @Delete('delete-user')
+  @Delete('delete-user/:id')
   async deleteUser(@Param('id') id: string) {
     try {
       const response = await firstValueFrom(
