@@ -1,7 +1,6 @@
+import { Role } from "../enum/roles.enum";
 
 export interface CurrentUser{
     id: string;
-    name: string;
-    email: string;
-    role?: string;
+    roles?: string[];
 }

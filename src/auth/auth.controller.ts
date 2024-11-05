@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Inject, UseGuards, Req, Res, UnauthorizedException, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, Inject, UseGuards, Req, Res, UnauthorizedException, Patch, HttpStatus } from '@nestjs/common';
 import { envs, NATS_SERVICE } from 'src/config';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { RegisterUserDto } from './dto/register-user.dto';
@@ -13,6 +13,7 @@ import { Role } from './enum/roles.enum';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { RefreshTokenGuard } from './guards/auth-refresh.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -22,18 +23,18 @@ export class AuthController {
   ) { }
 
   @Post('register')
-  async registerUser(@Body() registerUserDto: RegisterUserDto, @Res({passthrough:true}) res: Response) {
+  async registerUser(@Body() registerUserDto: RegisterUserDto, @Res({ passthrough: true }) res: Response) {
     try {
       const user = await firstValueFrom(
         this.client.send('auth.register.user', registerUserDto)
       )
       const { accessToken, refreshToken } = user;
-      
+
       res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
-        secure:process.env.NODE_ENV === 'production',
+        secure: process.env.NODE_ENV === 'production',
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 días
-        path: '/api/auth/refresh', 
+        path: '/api/auth',
       });
 
       return { accessToken };
@@ -51,26 +52,55 @@ export class AuthController {
         this.client.send('auth.login.user', loginUserDto)
       )
       const { accessToken, refreshToken } = user;
-      
+
       res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
-        secure:process.env.NODE_ENV === 'production',
+        secure: process.env.NODE_ENV === 'production',
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 días
-        path: '/api/auth/refresh', 
+        path: '/api/auth',
       });
-
-      return { accessToken };
-
+      return {
+        accessToken,
+        message: 'Login successful'
+      };
     } catch (error) {
       throw new RpcException(error);
     }
   }
 
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE, Role.USER_ROLE)
+  @Post('logout')
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response, @User() user: CurrentUser) {
+    const refreshToken = req.cookies['refreshToken'];
+    
+    try { 
+      await firstValueFrom(
+        this.client.send('auth.invalidate.refresh.token', {
+          refreshToken,
+          userId:user.id
+        })
+      );
+      res.clearCookie('refreshToken', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        path: '/api/auth',
+      });
+      return { 
+        statusCode: HttpStatus.OK,
+        message: 'Logged out successfully' 
+      };
+    } catch (error) {
+      throw new RpcException(error);
+    }
+
+  }
+
   @Post('forgot-password')
-  async forgotPassword(@Body() forgotPassworddto:ForgotPasswordDto) {
+  async forgotPassword(@Body() forgotPassworddto: ForgotPasswordDto) {
     try {
       const response = await firstValueFrom(
-        this.client.send('auth.forgot.password',forgotPassworddto)
+        this.client.send('auth.forgot.password', forgotPassworddto)
       )
       return response
     } catch (error) {
@@ -82,7 +112,7 @@ export class AuthController {
   async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     try {
       const response = await firstValueFrom(
-        this.client.send('auth.reset.password',resetPasswordDto)
+        this.client.send('auth.reset.password', resetPasswordDto)
       )
       return response;
     } catch (error) {
@@ -91,7 +121,7 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard)
-  @Roles(Role.ADMIN_ROLE,Role.USER_ROLE)
+  @Roles(Role.ADMIN_ROLE, Role.USER_ROLE)
   @Patch('change-password')
   async changePassword(@Body() changePasswordDto: ChangePasswordDto) {
     try {
@@ -106,18 +136,17 @@ export class AuthController {
 
 
   @UseGuards(AuthGuard)
-  @Roles(Role.ADMIN_ROLE,Role.USER_ROLE)
+  @Roles(Role.ADMIN_ROLE, Role.USER_ROLE)
   @Get('verify')
   verifyToken(@User() user: CurrentUser, @Token() token: string) {
-    //return this.client.send('auth.verify.token',{})
     return {
       user,
       token
     }
   }
 
-  @UseGuards(AuthGuard)
-  @Roles(Role.ADMIN_ROLE,Role.USER_ROLE)
+  @UseGuards(RefreshTokenGuard)
+  @Roles(Role.ADMIN_ROLE, Role.USER_ROLE)
   @Post('refresh')
   async refreshAccessToken(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const refreshToken = req.cookies['refreshToken'];
@@ -130,8 +159,8 @@ export class AuthController {
       )
       const { accessToken } = tokens;
 
-      return { accessToken };
-      
+      return { accessToken };  
+
     } catch (error) {
       throw new RpcException(error)
     }

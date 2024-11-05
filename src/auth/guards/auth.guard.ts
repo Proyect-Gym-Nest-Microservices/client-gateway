@@ -18,13 +18,14 @@ export class AuthGuard implements CanActivate {
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const validRoles = this.reflector.get<string[]>(ROLES_KEY, context.getHandler())
         const request = context.switchToHttp().getRequest();
+
         const token = this.extractTokenFromHeader(request);
         if (!token) {
             throw new UnauthorizedException('Token not found');
         }
         try {
             const {user}=await firstValueFrom(
-                this.client.send('auth.verify.token',token)
+                this.client.send('auth.verify.access.token',token)
             )
 
             request['user'] = user
