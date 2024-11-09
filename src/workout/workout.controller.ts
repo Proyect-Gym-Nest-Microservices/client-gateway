@@ -58,8 +58,8 @@ export class WorkoutController {
     }
   }
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE,Role.USER_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE,Role.USER_ROLE)
   @Get('find-by-id-exercise-in-workout/:id')
   async findExerciseInWorkoutById(@Param('id', ParseIntPipe) id: number) {
     try {
