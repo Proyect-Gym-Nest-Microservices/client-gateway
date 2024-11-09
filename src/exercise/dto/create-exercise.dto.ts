@@ -1,6 +1,5 @@
-import { IsArray, IsBoolean, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { DifficultiesList, Difficulty } from '../enums/difficulties.enu';
-import { CategoriesList, Category } from '../enums/categories.enum';
+import { ArrayMinSize, IsArray, IsBoolean, IsEnum, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { CategoriesList, Category, DifficultiesList, Difficulty } from 'src/common';
 
 
 export class CreateExerciseDto {
@@ -13,13 +12,13 @@ export class CreateExerciseDto {
     name: string;
 
     @IsEnum(DifficultiesList, {
-        message: `Possible level value are ${DifficultiesList}`
+        message: `Possible status value are ${DifficultiesList}`
     })
     @IsNotEmpty()
     level: Difficulty;
 
     @IsEnum(CategoriesList, {
-        message: `Possible category value are ${CategoriesList}`
+        message: `Possible status value are ${CategoriesList}`
     })
     @IsNotEmpty()
     category: Category;
@@ -33,6 +32,8 @@ export class CreateExerciseDto {
     description: string;
 
     @IsArray()
+    @ArrayMinSize(1)
+    @IsInt({ each: true, message: 'Each workout ID must be an integer.' })
     muscleGroupsIds: number[];
 
     @IsOptional()
