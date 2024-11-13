@@ -12,20 +12,16 @@ export class CreateExerciseDto {
     name: string;
 
     @IsEnum(DifficultiesList, {
-        message: `Possible status value are ${DifficultiesList}`
+        message: `Possible level value are ${DifficultiesList}`
     })
     @IsNotEmpty()
     level: Difficulty;
 
     @IsEnum(CategoriesList, {
-        message: `Possible status value are ${CategoriesList}`
+        message: `Possible category value are ${CategoriesList}`
     })
     @IsNotEmpty()
     category: Category;
-
-    @IsString()
-    @IsNotEmpty()
-    equipment: string;
 
     @IsString()
     @IsNotEmpty()
@@ -33,8 +29,13 @@ export class CreateExerciseDto {
 
     @IsArray()
     @ArrayMinSize(1)
-    @IsInt({ each: true, message: 'Each workout ID must be an integer.' })
+    @IsInt({ each: true, message: 'Each muscle group ID must be an integer.' })
     muscleGroupsIds: number[];
+
+    @IsArray()
+    @ArrayMinSize(1)
+    @IsInt({ each: true, message: 'Each equipment ID must be an integer.' })
+    equipmentIds: number[];
 
     @IsOptional()
     @IsString()

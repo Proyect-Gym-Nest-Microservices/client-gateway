@@ -25,13 +25,13 @@ export class CreateWorkoutDto {
     duration: number;
 
     @IsEnum(DifficultiesList, {
-        message: `Possible status value are ${DifficultiesList}`
+        message: `Possible level value are ${DifficultiesList}`
     })
     @IsNotEmpty()
     level: Difficulty;
 
     @IsEnum(CategoriesList, {
-        message: `Possible status value are ${CategoriesList}`
+        message: `Possible category value are ${CategoriesList}`
     })
     @IsNotEmpty()
     category: Category;

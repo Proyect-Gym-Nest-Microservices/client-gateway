@@ -6,9 +6,10 @@ import { WorkoutModule } from './workout/workout.module';
 import { ExerciseModule } from './exercise/exercise.module';
 import { TrainingPlanModule } from './training-plan/training-plan.module';
 import { MuscleGroupModule } from './muscle-group/muscle-group.module';
+import { EquipmentModule } from './equipment/equipment.module';
 
 @Module({
-  imports: [AuthModule, NatsModule, UserModule, WorkoutModule, ExerciseModule, TrainingPlanModule, MuscleGroupModule],
+  imports: [AuthModule, NatsModule, UserModule, WorkoutModule, ExerciseModule, TrainingPlanModule, MuscleGroupModule, EquipmentModule],
 
 })
 export class AppModule {}

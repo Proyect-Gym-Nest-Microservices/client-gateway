@@ -9,7 +9,7 @@ export class CreateTrainingPlanDto {
     name: string;
 
     @IsEnum(DifficultiesList, {
-        message: `Possible status value are ${DifficultiesList}`
+        message: `Possible level value are ${DifficultiesList}`
     })
     @IsNotEmpty()
     level: Difficulty;
