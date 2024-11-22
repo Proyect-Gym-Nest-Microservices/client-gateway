@@ -86,4 +86,17 @@ export class NutritionController {
       throw new RpcException(error)
     }
   }
+
+
+  @Get('find-by-ids')
+  async findNutritionPlansByIds(@Body() ids: string[]) {
+    try {
+      const response = await firstValueFrom(
+        this.client.send('find.nutrition.plans.by.ids', { ids })
+      )
+      return response;
+    } catch (error) {
+      throw new RpcException(error)
+    }
+  }
 }
