@@ -8,9 +8,10 @@ import { TrainingPlanModule } from './training-plan/training-plan.module';
 import { MuscleGroupModule } from './muscle-group/muscle-group.module';
 import { EquipmentModule } from './equipment/equipment.module';
 import { NutritionModule } from './nutrition/nutrition.module';
+import { AnalyticsModule } from './analytics/analytics.module';
 
 @Module({
-  imports: [AuthModule, NatsModule, UserModule, WorkoutModule, ExerciseModule, TrainingPlanModule, MuscleGroupModule, EquipmentModule, NutritionModule],
+  imports: [AuthModule, NatsModule, UserModule, WorkoutModule, ExerciseModule, TrainingPlanModule, MuscleGroupModule, EquipmentModule, NutritionModule, AnalyticsModule],
 
 })
 export class AppModule {}

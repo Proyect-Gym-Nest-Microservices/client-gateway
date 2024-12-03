@@ -7,6 +7,7 @@ import { PaginationDto, Role } from 'src/common';
 import { NATS_SERVICE } from 'src/config';
 import { UpdateNutritionDto } from './dto/update-nutrition.dto';
 import { CreateNutritionDto } from './dto/create-nutrition.dto';
+import { ListNutritionIdsDto } from './dto/list-nutrition-ids.dto';
 
 @Controller('nutrition')
 export class NutritionController {
@@ -89,10 +90,11 @@ export class NutritionController {
 
 
   @Get('find-by-ids')
-  async findNutritionPlansByIds(@Body() ids: string[]) {
+  async findNutritionPlansByIds(@Body() listNutritionIdsDto: ListNutritionIdsDto) {
+    console.log(listNutritionIdsDto)
     try {
       const response = await firstValueFrom(
-        this.client.send('find.nutrition.plans.by.ids', { ids })
+        this.client.send('find.nutrition.plans.by.ids', listNutritionIdsDto)
       )
       return response;
     } catch (error) {

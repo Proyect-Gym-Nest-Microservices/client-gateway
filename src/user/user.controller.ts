@@ -16,11 +16,12 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Roles(Role.ADMIN_ROLE, Role.USER_ROLE)
-  @Patch('update-user')
-  async updateUser(@Body() updateUserDto:UpdateUserDto) {
+  @Patch('update-user/:id')
+  async updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    console.log(id)
     try {
       const response = await firstValueFrom(
-        this.client.send('update.user',updateUserDto)
+        this.client.send('update.user',{id,updateUserDto})
       )
       return response;
     } catch (error) {
