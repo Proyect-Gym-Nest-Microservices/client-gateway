@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Inject, Param, Patch, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Param, ParseArrayPipe, ParseUUIDPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { NATS_SERVICE } from 'src/config';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -7,6 +7,7 @@ import { PaginationDto } from 'src/common';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enum/roles.enum';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { MongoIdDto } from './dto/mongo-id.dto';
 
 @Controller('user')
 export class UserController {
@@ -17,11 +18,10 @@ export class UserController {
   @UseGuards(AuthGuard)
   @Roles(Role.ADMIN_ROLE, Role.USER_ROLE)
   @Patch('update-user/:id')
-  async updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    console.log(id)
+  async updateUser(@Param() params: MongoIdDto, @Body() updateUserDto: UpdateUserDto) {
     try {
       const response = await firstValueFrom(
-        this.client.send('update.user',{id,updateUserDto})
+        this.client.send('update.user', { id:params.id, updateUserDto })
       )
       return response;
     } catch (error) {
@@ -30,12 +30,12 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard)
-  @Roles(Role.ADMIN_ROLE,Role.USER_ROLE)
+  @Roles(Role.ADMIN_ROLE, Role.USER_ROLE)
   @Get('find-by-id/:id')
-  async findUserById(@Param('id') id: string) {
+  async findUserById(@Param() params: MongoIdDto) {
     try {
       const response = await firstValueFrom(
-        this.client.send('find.user.by.id',id)
+        this.client.send('find.user.by.id', {id:params.id})
       )
       return response
     } catch (error) {
@@ -51,19 +51,61 @@ export class UserController {
       const users = await firstValueFrom(
         this.client.send('find.all.users', paginationDto)
       )
-      return users;      
+      return users;
     } catch (error) {
       throw new RpcException(error)
+    }
+  }
+
+  //@UseGuards(AuthGuard)
+  //@Roles(Role.ADMIN_ROLE, Role.USER_ROLE)
+  @Get('find-training-plans/:id')
+  async findTrainingPlanByIds(@Param() params: MongoIdDto) {
+    try {
+      const response = await firstValueFrom(
+        this.client.send('get.user.training.plans', {id:params.id})
+      );
+
+      return response;
+    } catch (error) {
+      throw new RpcException(error);
+    }
+  }
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE, Role.USER_ROLE)
+  @Get('find-workouts/:id')
+  async getUserWorkouts(@Param()params: MongoIdDto) {
+    try {
+      const response = await firstValueFrom(
+        this.client.send('get.user.workouts', {id:params.id})
+      );
+
+      return response;
+    } catch (error) {
+      throw new RpcException(error);
+    }
+  }
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE, Role.USER_ROLE)
+  @Get('find-nutrition-plans/:id')
+  async findNutritionPlanByIds(@Param() params: MongoIdDto) {
+    try {
+      const response = await firstValueFrom(
+        this.client.send('get.user.nutritions', {id:params.id})
+      );
+      return response;
+    } catch (error) {
+      throw new RpcException(error);
     }
   }
 
   @UseGuards(AuthGuard)
   @Roles(Role.ADMIN_ROLE)
   @Delete('delete-user/:id')
-  async deleteUser(@Param('id') id: string) {
+  async deleteUser(@Param() params: MongoIdDto) {
     try {
       const response = await firstValueFrom(
-        this.client.send('remove.user',id)
+        this.client.send('remove.user', {id:params.id})
       )
       return response
     } catch (error) {
