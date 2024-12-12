@@ -7,7 +7,6 @@ import { PaginationDto, Role } from 'src/common';
 import { NATS_SERVICE } from 'src/config';
 import { UpdateNutritionDto } from './dto/update-nutrition.dto';
 import { CreateNutritionDto } from './dto/create-nutrition.dto';
-import { ListNutritionIdsDto } from './dto/list-nutrition-ids.dto';
 
 @Controller('nutrition')
 export class NutritionController {
@@ -87,5 +86,5 @@ export class NutritionController {
       throw new RpcException(error)
     }
   }
-
+ 
 }

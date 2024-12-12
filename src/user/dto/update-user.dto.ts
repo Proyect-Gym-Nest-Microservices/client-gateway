@@ -12,6 +12,7 @@ export class UpdateUserDto {
     avatarUrl?: string
 
     @IsEnum(UserType)
+    @IsOptional()
     userType?: UserType;
 
     @IsNumber()
