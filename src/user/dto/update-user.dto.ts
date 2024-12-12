@@ -1,4 +1,4 @@
-import { IsArray, IsBoolean, IsEnum, IsNumber, IsOptional, IsString, Matches } from "class-validator";
+import { ArrayUnique, IsArray, IsBoolean, IsEnum, IsMongoId, IsNumber, IsOptional, IsString, Matches } from "class-validator";
 import { FitnessLevel, Gender, Goal, UserType } from "../enum/user.enum";
 
 export class UpdateUserDto {
@@ -43,19 +43,21 @@ export class UpdateUserDto {
     injury?: string; // Lesión del usuario (si tiene)
 
 
-    // Referencias a otros microservicios (IDs utilizados para realizar peticiones a los microservicios de Workout, Nutrition y Training Plan)
     @IsArray()
     @IsOptional()
-    @Matches(/^[0-9a-fA-F]{24}$/, { each: true, message: 'Invalid MongoDB ID format' })
+    @ArrayUnique()
+    @IsMongoId({each:true,message: 'Invalid MongoDB ID format'})
     nutritionIds?: string[];
 
     @IsArray()
     @IsOptional()
+    @ArrayUnique()
     @IsNumber({}, { each: true, message: 'Each workoutId must be a number (PostgreSQL ID)' })
     workoutIds?: number[];
 
     @IsArray()
     @IsOptional()
+    @ArrayUnique()
     @IsNumber({}, { each: true, message: 'Each trainingPlanId must be a number (PostgreSQL ID)' })
     trainingPlanIds?: number[];
 

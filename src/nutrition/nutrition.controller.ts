@@ -15,8 +15,8 @@ export class NutritionController {
     @Inject(NATS_SERVICE) private readonly client: ClientProxy
   ) { }
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
   @Post('create')
   async createNutritionPlan(@Body() createNutritionDto: CreateNutritionDto) {
     try {
@@ -29,8 +29,8 @@ export class NutritionController {
     }
   }
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE, Role.USER_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE, Role.USER_ROLE)
   @Get('find-all')
   async findAllNutritionPlans(@Query() paginationDto: PaginationDto) {
     try {
@@ -43,8 +43,8 @@ export class NutritionController {
     }
   }
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE, Role.USER_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE, Role.USER_ROLE)
   @Get('find-by-id/:id')
   async findNutritionPlanById(@Param('id') id: string) {
     try {
@@ -57,8 +57,8 @@ export class NutritionController {
     }
   }
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
   @Patch('update/:id')
   async updateNutritionPlan(
     @Param('id') id: string,
@@ -74,8 +74,8 @@ export class NutritionController {
     }
   }
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
   @Delete('delete/:id')
   async removeNutritionPlan(@Param('id') id: string) {
     try {
@@ -88,17 +88,4 @@ export class NutritionController {
     }
   }
 
-
-  @Get('find-by-ids')
-  async findNutritionPlansByIds(@Body() listNutritionIdsDto: ListNutritionIdsDto) {
-    console.log(listNutritionIdsDto)
-    try {
-      const response = await firstValueFrom(
-        this.client.send('find.nutrition.plans.by.ids', listNutritionIdsDto)
-      )
-      return response;
-    } catch (error) {
-      throw new RpcException(error)
-    }
-  }
 }

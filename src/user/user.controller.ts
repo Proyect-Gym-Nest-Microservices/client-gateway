@@ -57,8 +57,8 @@ export class UserController {
     }
   }
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE, Role.USER_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE, Role.USER_ROLE)
   @Get('find-training-plans/:id')
   async findTrainingPlanByIds(@Param() params: MongoIdDto) {
     try {
