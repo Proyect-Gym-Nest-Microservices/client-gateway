@@ -14,8 +14,8 @@ export class AnalyticsController {
     @Inject(NATS_SERVICE) private readonly client: ClientProxy
   ) { }
 
-  @UseGuards(AuthGuard)
-  @Roles(Role.ADMIN_ROLE)
+  //@UseGuards(AuthGuard)
+  //@Roles(Role.ADMIN_ROLE)
   @Post('generate')
   async generateUserStatistics(
     @Body() userStatsDto: UserStatsDto
@@ -30,8 +30,8 @@ export class AnalyticsController {
     }
   }
 
-  @UseGuards(AuthGuard)
-  @Roles(Role.ADMIN_ROLE)
+  //@UseGuards(AuthGuard)
+  //@Roles(Role.ADMIN_ROLE)
   @Get('get-statistics')
   async getStatistics(
     @Query('period') period: Period,

@@ -86,5 +86,4 @@ export class NutritionController {
       throw new RpcException(error)
     }
   }
- 
 }
