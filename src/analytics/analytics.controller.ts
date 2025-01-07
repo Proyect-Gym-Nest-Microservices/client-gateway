@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Inject, Param, Post, Query, UseGuards } 
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
-import { Role } from 'src/common';
+import { PaginationDto, Role } from 'src/common';
 import { NATS_SERVICE } from 'src/config';
 import { Period } from './enums/analytics.enum';
 import { firstValueFrom } from 'rxjs';
@@ -68,6 +68,19 @@ export class AnalyticsController {
       throw new RpcException(error);
     }
   }
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
+  @Get('find-all/exercise-statistics')
+  async findAllExerciseStats(@Query() paginationDto:PaginationDto) {
+    try {
+      const statistics = await firstValueFrom(
+        this.client.send('find.all.exercise.stats', paginationDto)
+      );
+      return statistics;
+    } catch (error) {
+      throw new RpcException(error);
+    }
+  }
 
   @UseGuards(AuthGuard)
   @Roles(Role.ADMIN_ROLE)
@@ -111,6 +124,20 @@ export class AnalyticsController {
     try {
       const statistics = await firstValueFrom(
         this.client.send('get.training.plan.statistics', datePeriodDto)
+      );
+      return statistics;
+    } catch (error) {
+      throw new RpcException(error);
+    }
+  }
+
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
+  @Get('find-all/training-plan-statistics')
+  async findAllTrainingPlanStats(@Query() paginationDto:PaginationDto) {
+    try {
+      const statistics = await firstValueFrom(
+        this.client.send('find.all.training.stats', paginationDto)
       );
       return statistics;
     } catch (error) {
@@ -185,6 +212,20 @@ export class AnalyticsController {
 
   @UseGuards(AuthGuard)
   @Roles(Role.ADMIN_ROLE)
+  @Get('find-all/workout-statistics')
+  async findAllWorkoutStats(@Query() paginationDto:PaginationDto) {
+    try {
+      const statistics = await firstValueFrom(
+        this.client.send('find.all.workout.stats', paginationDto)
+      );
+      return statistics;
+    } catch (error) {
+      throw new RpcException(error);
+    }
+  }
+
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
   @Get('find/workout-statistics/:id')
   async findWorkoutStatsById(
     @Param() mongoIdDto: MongoIdDto
@@ -240,6 +281,20 @@ export class AnalyticsController {
     try {
       const statistics = await firstValueFrom(
         this.client.send('get.equipment.statistics', datePeriodDto)
+      );
+      return statistics;
+    } catch (error) {
+      throw new RpcException(error);
+    }
+  }
+
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
+  @Get('find-all/equipment-statistics')
+  async findAllEquipmentStats(@Query() paginationDto:PaginationDto) {
+    try {
+      const statistics = await firstValueFrom(
+        this.client.send('find.all.equipment.stats', paginationDto)
       );
       return statistics;
     } catch (error) {
@@ -309,6 +364,20 @@ export class AnalyticsController {
       return statistics;
     } catch (error) {
       throw new RpcException(error)
+    }
+  }
+
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
+  @Get('find-all/user-statistics')
+  async findAllUserStats(@Query() paginationDto:PaginationDto) {
+    try {
+      const statistics = await firstValueFrom(
+        this.client.send('find.all.user.stats', paginationDto)
+      );
+      return statistics;
+    } catch (error) {
+      throw new RpcException(error);
     }
   }
 
