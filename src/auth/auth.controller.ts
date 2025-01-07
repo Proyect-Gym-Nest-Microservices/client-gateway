@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Body, Inject, UseGuards, Req, Res, UnauthorizedException, Patch, HttpStatus } from '@nestjs/common';
-import { envs, NATS_SERVICE } from 'src/config';
+import { NATS_SERVICE } from 'src/config';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { RegisterUserDto } from './dto/register-user.dto';
-import { catchError, firstValueFrom, timeout } from 'rxjs';
+import {firstValueFrom } from 'rxjs';
 import { LoginUserDto } from './dto/login-user.dto';
 import { CurrentUser } from './interfaces/current-user.interface';
 import { Token, User } from './decorators';

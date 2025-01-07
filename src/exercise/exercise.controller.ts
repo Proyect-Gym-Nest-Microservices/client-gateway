@@ -65,7 +65,6 @@ export class ExerciseController {
   @Patch('update-exercise/:id')
   async updateExercise(@Param('id', ParseIntPipe) id: number, @Body() updateExerciseDto: UpdateExerciseDto) {
     try {
-      console.log(`param: ${id}`)
       const response = await firstValueFrom(
         this.client.send('update.one.exercise', { id, updateExerciseDto })
       )

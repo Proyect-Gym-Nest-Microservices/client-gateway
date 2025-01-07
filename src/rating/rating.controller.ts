@@ -21,7 +21,6 @@ export class RatingController {
   async createRating(@User('id') id:string, @Body() createRatingDto: createRatingDto) {
     try {
       createRatingDto.userId = id;
-      console.log({createRatingDto})
       const response = await firstValueFrom(
         this.client.send('create.rating', createRatingDto)
       )

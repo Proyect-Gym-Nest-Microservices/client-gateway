@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Inject, Param, ParseArrayPipe, ParseUUIDPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Param, Patch, Query, UseGuards } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { NATS_SERVICE } from 'src/config';
 import { UpdateUserDto } from './dto/update-user.dto';

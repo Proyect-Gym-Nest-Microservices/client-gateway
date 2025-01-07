@@ -13,9 +13,9 @@ export class createRatingDto {
     @IsMongoId()
     userId?: string;
 
-    @IsNotEmpty()
-    @IsString()
-    targetId: string;
+    
+    @IsNumber()
+    targetId: number;
 
     @IsEnum(TargetType)
     targetType: TargetType;
