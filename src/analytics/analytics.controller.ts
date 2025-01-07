@@ -21,8 +21,8 @@ export class AnalyticsController {
 
   //-Exercise Statistics Controller
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
   @Post('generate/exercise-statistics')
   async generateExerciseStatistics(
     @Body() exerciseStatsDto: ExerciseStatisticsDto
@@ -37,8 +37,8 @@ export class AnalyticsController {
     }
   }
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
   @Get('get-exercise-statistics')
   async getExerciseStatistics(
     @Query() datePeriodDto: DatePeriodDto
@@ -53,8 +53,8 @@ export class AnalyticsController {
     }
   }
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
   @Get('find/exercise-statistics/:id')
   async findExerciseStatsById(
     @Param() mongoIdDto: MongoIdDto
@@ -69,8 +69,8 @@ export class AnalyticsController {
     }
   }
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
   @Delete('delete/exercise-statistic/:id')
   async deleteExerciseStatistics(
     @Param() mongoIdDto: MongoIdDto
@@ -86,8 +86,8 @@ export class AnalyticsController {
 
   //- Training Plan Statistics Controller
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
   @Post('generate/training-plan-statistics')
   async generateTrainingPlanStatistics(
     @Body() trainingPlanStatsDto: TrainingPlanStatisticsDto
@@ -102,8 +102,8 @@ export class AnalyticsController {
     }
   }
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
   @Get('get-training-plan-statistics')
   async getTrainingPlanStatistics(
     @Query() datePeriodDto: DatePeriodDto
@@ -118,8 +118,8 @@ export class AnalyticsController {
     }
   }
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
   @Get('find/training-plan-statistics/:id')
   async findTrainingPlanStatsById(
     @Param() mongoIdDto: MongoIdDto
@@ -134,8 +134,8 @@ export class AnalyticsController {
     }
   }
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
   @Delete('delete/training-plan-statistic/:id')
   async deleteTrainingPlanStatistics(
     @Param() mongoIdDto: MongoIdDto
@@ -151,8 +151,8 @@ export class AnalyticsController {
 
   //- Workout Statistics Controller
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
   @Post('generate/workout-statistics')
   async generateWorkoutStatistics(
     @Body() workoutStatsDto: WorkoutStatisticsDto
@@ -167,8 +167,8 @@ export class AnalyticsController {
     }
   }
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
   @Get('get-workout-statistics')
   async getWorkoutStatistics(
     @Query() datePeriodDto: DatePeriodDto
@@ -183,8 +183,8 @@ export class AnalyticsController {
     }
   }
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
   @Get('find/workout-statistics/:id')
   async findWorkoutStatsById(
     @Param() mongoIdDto: MongoIdDto
@@ -199,8 +199,8 @@ export class AnalyticsController {
     }
   }
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
   @Delete('delete/workout-statistic/:id')
   async deleteWorkoutStatistics(
     @Param() mongoIdDto: MongoIdDto
@@ -215,8 +215,8 @@ export class AnalyticsController {
   }
   //- Equipment Statistics Controller
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
   @Post('generate/equipment-statistics')
   async generateEquipmentStatistics(
     @Body() equipmentStatsDto: EquipmentStatisticsDto
@@ -231,8 +231,8 @@ export class AnalyticsController {
     }
   }
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
   @Get('get-equipment-statistics')
   async getEquipmentStatistics(
     @Query() datePeriodDto: DatePeriodDto
@@ -247,8 +247,8 @@ export class AnalyticsController {
     }
   }
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
   @Get('find/equipment-statistics/:id')
   async findEquipmentStatsById(
     @Param() mongoIdDto: MongoIdDto
@@ -263,8 +263,8 @@ export class AnalyticsController {
     }
   }
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
   @Delete('delete/equipment-statistic/:id')
   async deleteEquipmentStatistics(
     @Param() mongoIdDto: MongoIdDto
@@ -279,8 +279,8 @@ export class AnalyticsController {
   }
 
   //-User Statistics Controller
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
   @Post('generate-user-statistics')
   async generateUserStatistics(
     @Body() datePeriodDto: DatePeriodDto
@@ -295,8 +295,8 @@ export class AnalyticsController {
     }
   }
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
   @Get('get-user-statistics')
   async getUserStatistics(
     @Query('period') period: Period,
@@ -312,8 +312,8 @@ export class AnalyticsController {
     }
   }
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
   @Get('find/user-statistics/:id')
   async findUserStatsById(
     @Param() mongoIdDto: MongoIdDto
@@ -328,8 +328,8 @@ export class AnalyticsController {
     }
   }
 
-  //@UseGuards(AuthGuard)
-  //@Roles(Role.ADMIN_ROLE)
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN_ROLE)
   @Delete('delete/user-statistic/:id')
   async deleteUserStatistics(
     @Param() mongoIdDto: MongoIdDto
